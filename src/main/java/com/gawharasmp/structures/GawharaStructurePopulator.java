@@ -166,8 +166,8 @@ final class GawharaStructurePopulator extends BlockPopulator {
                     column(region, x + ox, y + 1, z + oz, 2, Material.NETHER_BRICKS, chunkX, chunkZ);
                     put(region, x + ox, y + 3, z + oz, Material.MAGMA_BLOCK, chunkX, chunkZ);
                 }
-                put(region, x - 1, y + 1, z - 1, Material.CHAIN, chunkX, chunkZ);
-                put(region, x + 1, y + 1, z + 1, Material.CHAIN, chunkX, chunkZ);
+                put(region, x - 1, y + 1, z - 1, Material.IRON_CHAIN, chunkX, chunkZ);
+                put(region, x + 1, y + 1, z + 1, Material.IRON_CHAIN, chunkX, chunkZ);
                 treasure(region, x, y + 1, z, spec.lootTable(), random, chunkX, chunkZ);
             }
             case "void_shrine" -> {

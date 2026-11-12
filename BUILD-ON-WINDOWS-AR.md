@@ -9,10 +9,10 @@
 1. فك ضغط المشروع كاملًا.
 2. ثبّت JDK 25، ثم تأكد أن `java -version` يعرض الإصدار 25.
 3. ثبّت Maven، ثم تأكد أن `mvn -version` يعمل.
-4. افتح مجلد `GawharaStructures-1.0.0`.
+4. افتح مجلد `GawharaStructures-1.0.1`.
 5. شغّل `Build-JAR.bat`.
 6. بعد نجاح البناء ستجد الملف هنا:
-   `target/GawharaStructures-1.0.0.jar`
+   `target/GawharaStructures-1.0.1.jar`
 
 السكربت يتوقف برسالة واضحة إذا كان Java أو Maven غير متوفر أو الإصدار غير مناسب.
 

@@ -345,8 +345,8 @@ public final class GawharaStructures extends JavaPlugin implements Listener, Tab
             column(w, x + dx, y + 1, z + dz, 2, Material.NETHER_BRICKS, cx, cz);
             put(w, x + dx, y + 3, z + dz, Material.MAGMA_BLOCK, cx, cz);
         }
-        put(w, x - 1, y + 1, z - 1, Material.CHAIN, cx, cz);
-        put(w, x + 1, y + 1, z + 1, Material.CHAIN, cx, cz);
+        put(w, x - 1, y + 1, z - 1, Material.IRON_CHAIN, cx, cz);
+        put(w, x + 1, y + 1, z + 1, Material.IRON_CHAIN, cx, cz);
         placeTreasureChest(w, x, y + 1, z, "nether_common", r, cx, cz);
     }
 

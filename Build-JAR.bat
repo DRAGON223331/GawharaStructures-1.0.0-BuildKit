@@ -38,5 +38,5 @@ if errorlevel 1 (
 
 echo.
 echo [SUCCESS] JAR created:
-echo %CD%\target\GawharaStructures-1.0.0.jar
+echo %CD%\target\GawharaStructures-1.0.1.jar
 pause

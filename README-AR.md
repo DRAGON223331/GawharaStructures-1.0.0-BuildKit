@@ -1,4 +1,4 @@
-# GawharaStructures 1.0.0
+# GawharaStructures 1.0.1
 
 بلجن Paper يضيف هياكل استكشاف وكنوز مخفية إلى عوالم GawharaSMP. الهياكل تُنشأ تلقائيًا عند توليد الشنكات الجديدة، وتحتوي على صناديق بغنائم مختلفة حسب البُعد.
 
@@ -43,7 +43,7 @@ mvn -B clean package
 
 الملف الناتج:
 
-`target/GawharaStructures-1.0.0.jar`
+`target/GawharaStructures-1.0.1.jar`
 
 ### بناء تلقائي عبر GitHub Actions
 
@@ -51,13 +51,13 @@ mvn -B clean package
 2. ارفع **محتويات هذا المشروع** إلى جذر المستودع، بما فيها مجلد `.github`.
 3. افتح تبويب **Actions**.
 4. شغّل Workflow باسم **Build GawharaStructures**.
-5. بعد نجاحه، افتح نتيجة التشغيل ونزّل Artifact باسم `GawharaStructures-1.0.0`؛ ستجد بداخله ملف JAR.
+5. بعد نجاحه، افتح نتيجة التشغيل ونزّل Artifact باسم `GawharaStructures-1.0.1`؛ ستجد بداخله ملف JAR.
 
 الـ Workflow يستخدم JDK 25 ويجلب Paper API المطابقة من مستودع Paper الرسمي، ثم ينفذ Maven Build حقيقيًا.
 
 ## التثبيت
 
-1. ضع `GawharaStructures-1.0.0.jar` داخل `plugins/`.
+1. ضع `GawharaStructures-1.0.1.jar` داخل `plugins/`.
 2. أعد تشغيل السيرفر بالكامل.
 3. راجع `plugins/GawharaStructures/config.yml`.
 4. خذ نسخة احتياطية قبل تجربة التوليد على عالمك الأساسي.
@@ -96,4 +96,8 @@ mvn -B clean package
 
 ## حدود الاختبار
 
-تم التحقق من بناء ملفات المشروع، وصحة YAML، وقائمة العوالم، ومنع `spawn` في الكود بما في ذلك الأمر الإداري. لم يتم تنفيذ Maven Build فعلي داخل بيئة الإنشاء الحالية لعدم توفر Maven وJDK 25 أو اتصال بمستودع Paper؛ استخدم GitHub Actions أو بيئة بناء مجهزة لإنتاج JAR قبل تثبيته.
+تم فحص ملفات المشروع وYAML وقائمة العوالم ومنع `spawn`. لم يتم تنفيذ Maven Build فعلي في بيئة إعداد هذه الحزمة؛ شغّل GitHub Actions للتأكد من نجاح الترجمة وإنتاج JAR قبل تثبيته.
+
+## الإصدار 1.0.1 — إصلاح توافق Paper 26.3
+- استبدال `Material.CHAIN` غير الموجود في Material enum الخاص بـ Paper 26.3 بـ `Material.IRON_CHAIN` في جميع مواضع الهياكل.
+- لم تتغير قائمة العوالم: `world` و`world_nether` و`world_the_end` فقط؛ ويظل `spawn` ممنوعًا.
