@@ -1,4 +1,3 @@
-
 name: Build GawharaStructures
 
 on:
@@ -7,15 +6,18 @@ on:
     branches:
       - main
       - master
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+      - '.github/workflows/main.yml'
 
 permissions:
   contents: read
 
 jobs:
   build:
-    name: Build Plugin JAR
+    name: Build plugin JAR
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -27,18 +29,23 @@ jobs:
           java-version: '25'
           cache: maven
 
-      - name: Build with Maven
+      - name: Show Java and Maven versions
+        run: |
+          java --version
+          mvn --version
+
+      - name: Build against Paper API 26.3
         run: mvn --batch-mode --no-transfer-progress clean verify
 
-      - name: Verify JAR
+      - name: Verify generated plugin JAR
         run: |
-          test -f target/GawharaStructures-1.0.0.jar
-          jar tf target/GawharaStructures-1.0.0.jar
+          test -f target/GawharaStructures-1.0.1.jar
+          jar tf target/GawharaStructures-1.0.1.jar | grep -E 'plugin.yml|GawharaStructures.class|GawharaStructurePopulator.class'
 
-      - name: Upload JAR
+      - name: Upload plugin JAR
         uses: actions/upload-artifact@v7
         with:
-          name: GawharaStructures-1.0.0
-          path: target/GawharaStructures-1.0.0.jar
+          name: GawharaStructures-1.0.1
+          path: target/GawharaStructures-1.0.1.jar
           if-no-files-found: error
           retention-days: 14
