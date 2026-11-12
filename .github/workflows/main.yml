@@ -39,13 +39,13 @@ jobs:
 
       - name: Verify generated plugin JAR
         run: |
-          test -f target/GawharaStructures-1.0.1.jar
-          jar tf target/GawharaStructures-1.0.1.jar | grep -E 'plugin.yml|GawharaStructures.class|GawharaStructurePopulator.class'
+          test -f target/GawharaStructures-1.0.2.jar
+          jar tf target/GawharaStructures-1.0.2.jar | grep -E 'plugin.yml|GawharaStructures.class|GawharaStructurePopulator.class'
 
       - name: Upload plugin JAR
         uses: actions/upload-artifact@v7
         with:
-          name: GawharaStructures-1.0.1
+          name: GawharaStructures-1.0.2
           path: target/GawharaStructures-1.0.1.jar
           if-no-files-found: error
           retention-days: 14
