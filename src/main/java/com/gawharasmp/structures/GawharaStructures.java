@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -63,6 +64,39 @@ public final class GawharaStructures extends JavaPlugin implements Listener, Tab
     public void onDisable() {
         flushPendingRecords();
         saveStructureRecords();
+    }
+
+    @EventHandler
+    public void onWardenDeath(EntityDeathEvent event) {
+        if (!getConfig().getBoolean("coins.enabled", true)) return;
+        if (event.getEntity().getType() != org.bukkit.entity.EntityType.WARDEN) return;
+        Player killer = event.getEntity().getKiller();
+        if (killer == null) return;
+        if (!isWorldAllowed(killer.getWorld())) return;
+        long reward = Math.max(0L, getConfig().getLong("coins.warden-kill", 100L));
+        if (reward <= 0L) return;
+        String key = "structures:warden:" + event.getEntity().getUniqueId();
+        if (awardCoinsOnce(killer.getUniqueId(), reward, "Warden kill", key)) {
+            killer.sendMessage(color(PREFIX + "&aYou received &e" + reward + " GC &afor defeating a Warden!"));
+        } else {
+            getLogger().warning("Could not award Warden GC to " + killer.getName());
+        }
+    }
+
+    private boolean awardCoinsOnce(java.util.UUID playerId, long amount, String reason, String transactionKey) {
+        var coins = Bukkit.getPluginManager().getPlugin("GawharaCoins");
+        if (coins == null || !coins.isEnabled()) {
+            getLogger().warning("GawharaCoins is not installed/enabled; Warden GC reward was skipped.");
+            return false;
+        }
+        try {
+            Object result = coins.getClass().getMethod("awardCoinsOnce", java.util.UUID.class, long.class, String.class, String.class)
+                    .invoke(coins, playerId, amount, reason, transactionKey);
+            return Boolean.TRUE.equals(result);
+        } catch (ReflectiveOperationException ex) {
+            getLogger().log(java.util.logging.Level.SEVERE, "GawharaCoins API call failed", ex);
+            return false;
+        }
     }
 
     @EventHandler

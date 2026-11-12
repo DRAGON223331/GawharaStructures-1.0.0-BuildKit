@@ -2,6 +2,10 @@
 # Structures are generated only in explicitly enabled worlds below.
 # The world named "spawn" is denied even if accidentally added to the whitelist.
 
+coins:
+  enabled: true
+  warden-kill: 100
+
 generation:
   enabled: true
   chance-per-chunk: 0.025 # 2.5% per newly populated chunk if no world override exists
