@@ -1,5 +1,5 @@
 name: GawharaStructures
-version: 1.0.1
+version: 1.0.2
 main: com.gawharasmp.structures.GawharaStructures
 api-version: '26.3'
 authors: [GawharaSMP]

@@ -1,103 +1,32 @@
-# GawharaStructures 1.0.1
+## إصلاح الكراش في Paper 26.3 (1.0.2)
 
-بلجن Paper يضيف هياكل استكشاف وكنوز مخفية إلى عوالم GawharaSMP. الهياكل تُنشأ تلقائيًا عند توليد الشنكات الجديدة، وتحتوي على صناديق بغنائم مختلفة حسب البُعد.
+كان استدعاء فحص استواء الأرض يمرر معاملات `isFlat` بترتيب خاطئ: كان يرسل إحداثي X مكان ارتفاع الأرض، ما تسبب في استدعاء `LimitedRegion.getHighestBlockYAt` خارج المنطقة المسموح بها (`Coordinates ... are not in the region`) وأوقف Chunk Scheduler.
 
-## العوالم المسموح بها — حماية صريحة
+تم تصحيح ترتيب المعاملات، وإضافة `LimitedRegion.isInRegion` قبل كل قراءة ارتفاع في فحص الاستواء، وكذلك التحقق من نقطة مركز الشنك قبل فحص سطح الأرض.
 
-التوليد مسموح فقط في أسماء العوالم التالية:
+**مهم:** أزل JAR 1.0.1 قبل التشغيل، وثبّت 1.0.2 بعد إيقاف السيرفر بالكامل. لا تستخدم GawharaPluginManager لتحديث نسخة بلجن محمّلة بالفعل؛ تحميل نسخة ثانية فوق نفس البلجن غير آمن.
 
-- `world` — أطلال ومعابد وأبراج مراقبة.
-- `world_nether` — خزائن الروح ومخابئ الماجما.
-- `world_the_end` — أضرحة الفراغ ومراصد الإندر.
+# GawharaStructures 1.0.2 — Paper 26.3
 
-**عالم `spawn` محظور داخل الكود نفسه**، وليس فقط من خلال `config.yml`. وأي عالم آخر لن يتولد فيه شيء. حتى أمر الإدارة اليدوي `/gstructures generate` يرفض العمل في `spawn`، ويرفض إنشاء هيكل من بُعد غير مناسب.
+## إصلاح مهم في 1.0.2
+- إصلاح ترتيب معاملات `isFlat` الذي كان يمرر X بدل ارتفاع الأرض، ويسبب قراءة إحداثيات خارج `LimitedRegion`.
+- إضافة تحقق `LimitedRegion.isInRegion` قبل كل قراءة ارتفاع داخل فحص استواء الأرض.
+- إضافة تحقق حدود قبل قراءة سطح الأرض في بداية التوليد.
+- هذا الإصدار يمنع خطأ `Coordinates ... are not in the region` الذي كان يوقف Chunk Scheduler في Paper 26.3.
 
-## الهياكل الموجودة
+## العوالم
+التوليد محصور في `world` و`world_nether` و`world_the_end` فقط. عالم `spawn` محظور.
 
-| العالم | الهيكل | المحتوى |
-|---|---|---|
-| `world` | Forest Shrine | معبد غابة وصندوق نادر |
-| `world` | Ruined Watchtower | برج مراقبة مهجور وصندوق عادي |
-| `world` | Buried Ruins | أطلال حجرية وصندوق نادر |
-| `world_nether` | Soul Vault | خزنة من البلاكستون وصندوق نادر |
-| `world_nether` | Magma Cache | مخبأ بازلت وماجما وصندوق عادي |
-| `world_the_end` | Void Shrine | ضريح إند وصندوق نادر |
-| `world_the_end` | Ender Observatory | مرصد إندر وصندوق عادي |
+## البناء على GitHub
+1. ارفع محتويات المشروع إلى Repository.
+2. افتح Actions وشغّل `Build GawharaStructures`.
+3. نزّل Artifact `GawharaStructures-1.0.2` بعد نجاح البناء.
 
-الغنائم قابلة للتعديل بالكامل من `loot-tables` في `config.yml`، وتشمل أوزان احتمالات الظهور والكميات.
+## قبل التحديث
+- أوقف السيرفر بالكامل.
+- أزل JAR القديم `GawharaStructures-1.0.1.jar`.
+- ضع JAR الجديد 1.0.2.
+- لا تحذف `plugins/GawharaStructures/structures.yml` أو `config.yml`.
+- شغّل السيرفر.
 
-## المتطلبات
-
-- Paper `26.3.build.170-beta` (نفس خط إصدار السيرفر المستهدف).
-- Java 25.
-- Maven 3.9+ للبناء المحلي.
-- لا يحتاج Vault أو أي بلجن إضافي.
-
-## بناء ملف JAR
-
-من مجلد المشروع:
-
-```bash
-mvn -B clean package
-```
-
-الملف الناتج:
-
-`target/GawharaStructures-1.0.1.jar`
-
-### بناء تلقائي عبر GitHub Actions
-
-1. أنشئ Repository جديدًا على GitHub.
-2. ارفع **محتويات هذا المشروع** إلى جذر المستودع، بما فيها مجلد `.github`.
-3. افتح تبويب **Actions**.
-4. شغّل Workflow باسم **Build GawharaStructures**.
-5. بعد نجاحه، افتح نتيجة التشغيل ونزّل Artifact باسم `GawharaStructures-1.0.1`؛ ستجد بداخله ملف JAR.
-
-الـ Workflow يستخدم JDK 25 ويجلب Paper API المطابقة من مستودع Paper الرسمي، ثم ينفذ Maven Build حقيقيًا.
-
-## التثبيت
-
-1. ضع `GawharaStructures-1.0.1.jar` داخل `plugins/`.
-2. أعد تشغيل السيرفر بالكامل.
-3. راجع `plugins/GawharaStructures/config.yml`.
-4. خذ نسخة احتياطية قبل تجربة التوليد على عالمك الأساسي.
-
-## أوامر اللاعبين
-
-- `/gstructures locate` — يحدد أقرب هيكل مسجل في العالم الحالي.
-- `/gstructures list` — يعرض أنواع الهياكل.
-- `/gstructures help` — يعرض المساعدة.
-
-## أوامر الإدارة
-
-- `/gstructures generate <type>` — يولد هيكلًا يدويًا في الشنك الذي تقف فيه، في العالم المسموح فقط، وبعيدًا عن Spawn.
-- `/gstructures reload` — يعيد تحميل الإعدادات ويحدّث إعدادات Populator للعوالم المفتوحة.
-
-الصلاحية: `gawharastructures.admin` (افتراضيًا OP).
-
-## التوليد التلقائي
-
-- التوليد يحدث عند إنشاء الشنك لأول مرة فقط.
-- الشنكات التي سبق استكشافها لن تتغير تلقائيًا؛ استكشف مناطق غير مكتشفة لرؤية الهياكل الجديدة.
-- كل عالم له نسبة مستقلة من `chance-per-chunk`.
-- يوجد حد أدنى للمسافة عن Spawn وحد أدنى بين الهياكل.
-- التوليد يستخدم Paper `BlockPopulator` الحديث و`LimitedRegion`، ولا يعدّل العالم عبر `World` من خيط التوليد.
-
-## أهم إعدادات config.yml
-
-- `generation.enabled`: تشغيل/إيقاف التوليد التلقائي.
-- `worlds.<world>.enabled`: تفعيل العالم المحدد، مع بقاء قائمة العوالم المسموحة الصريحة في الكود.
-- `worlds.<world>.chance-per-chunk`: نسبة محاولة التوليد لكل شنك جديد.
-- `worlds.<world>.structures`: أنواع الهياكل المسموح بها في العالم.
-- `generation.min-distance-from-spawn`: المسافة الآمنة من نقطة Spawn لكل عالم.
-- `generation.min-distance-between-structures`: المسافة الدنيا بين الهياكل.
-- `generation.require-flat-ground` و`generation.max-ground-variation`: شروط الأرض المناسبة.
-- `loot.items-per-chest` و`loot-tables`: عدد العناصر ومحتويات الصناديق وأوزانها.
-
-## حدود الاختبار
-
-تم فحص ملفات المشروع وYAML وقائمة العوالم ومنع `spawn`. لم يتم تنفيذ Maven Build فعلي في بيئة إعداد هذه الحزمة؛ شغّل GitHub Actions للتأكد من نجاح الترجمة وإنتاج JAR قبل تثبيته.
-
-## الإصدار 1.0.1 — إصلاح توافق Paper 26.3
-- استبدال `Material.CHAIN` غير الموجود في Material enum الخاص بـ Paper 26.3 بـ `Material.IRON_CHAIN` في جميع مواضع الهياكل.
-- لم تتغير قائمة العوالم: `world` و`world_nether` و`world_the_end` فقط؛ ويظل `spawn` ممنوعًا.
+لا تستخدم PluginManager لمحاولة تحميل نسخة ثانية فوق النسخة المحمّلة؛ تحديث كود Plugin جارٍ يحتاج إعادة تشغيل كاملة.

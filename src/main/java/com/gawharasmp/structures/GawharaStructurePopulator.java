@@ -58,8 +58,11 @@ final class GawharaStructurePopulator extends BlockPopulator {
 
         int floorY = findSurfaceY(worldInfo, region, centerX, centerZ, -1);
         if (floorY == Integer.MIN_VALUE) return;
+        // Parameter order is (region, centerGroundY, x, z, maxVariation).
+        // Keep this exact order: swapping centerX with floorY sends LimitedRegion
+        // lookups outside its permitted buffer and can crash Paper's chunk scheduler.
         if (profile.requireFlat() && !"nether".equalsIgnoreCase(profile.theme())
-                && !isFlat(region, centerX, floorY - 1, centerZ, profile.maxGroundVariation())) return;
+                && !isFlat(region, floorY - 1, centerX, centerZ, profile.maxGroundVariation())) return;
 
         StructureSpec spec = profile.structures().get(random.nextInt(profile.structures().size()));
         if (!reservationIndex.reserve(profile.worldName(), centerX, centerZ, profile.minStructureDistance())) return;
@@ -73,6 +76,7 @@ final class GawharaStructurePopulator extends BlockPopulator {
 
     private int findSurfaceY(WorldInfo info, LimitedRegion region, int x, int z, int hintY) {
         int min = info.getMinHeight() + 5;
+        if (!region.isInRegion(x, min, z)) return Integer.MIN_VALUE;
         int max = info.getMaxHeight() - 8;
         int start;
         int end;
@@ -106,7 +110,12 @@ final class GawharaStructurePopulator extends BlockPopulator {
         int maxY = centerGroundY;
         for (int dx : new int[]{-3, 0, 3}) {
             for (int dz : new int[]{-3, 0, 3}) {
-                int y = region.getHighestBlockYAt(x + dx, z + dz);
+                int sampleX = x + dx;
+                int sampleZ = z + dz;
+                // LimitedRegion has strict X/Y/Z bounds. Check every sample before
+                // querying it; never assume the region's buffer covers a structure edge.
+                if (!region.isInRegion(sampleX, centerGroundY, sampleZ)) return false;
+                int y = region.getHighestBlockYAt(sampleX, sampleZ);
                 minY = Math.min(minY, y);
                 maxY = Math.max(maxY, y);
             }
