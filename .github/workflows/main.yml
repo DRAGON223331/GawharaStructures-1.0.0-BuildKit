@@ -3,9 +3,7 @@ name: Build GawharaStructures
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
     paths:
       - 'src/**'
       - 'pom.xml'
@@ -20,32 +18,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Java 25
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
           cache: maven
 
-      - name: Show Java and Maven versions
+      - name: Show tool versions
         run: |
           java --version
           mvn --version
 
-      - name: Build against Paper API 26.3
+      - name: Build with Maven
         run: mvn --batch-mode --no-transfer-progress clean verify
 
-      - name: Verify generated plugin JAR
+      - name: Find and verify generated JAR
+        id: verify
+        shell: bash
         run: |
-          test -f target/GawharaStructures-1.0.2.jar
-          jar tf target/GawharaStructures-1.0.2.jar | grep -E 'plugin.yml|GawharaStructures.class|GawharaStructurePopulator.class'
+          set -euo pipefail
+          mapfile -t jars < <(find target -maxdepth 1 -type f -name 'GawharaStructures-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' | sort)
+          if [[ ${#jars[@]} -ne 1 ]]; then
+            echo "Expected exactly one GawharaStructures JAR; found ${#jars[@]}"
+            ls -lah target/ || true
+            exit 1
+          fi
+          jar_file="${jars[0]}"
+          test -s "$jar_file"
+          jar tf "$jar_file" | grep -Fxq 'plugin.yml'
+          jar tf "$jar_file" | grep -Fxq 'com/gawharasmp/structures/GawharaStructures.class'
+          jar tf "$jar_file" | grep -Fxq 'com/gawharasmp/structures/GawharaStructurePopulator.class'
+          echo "jar_path=$jar_file" >> "$GITHUB_OUTPUT"
+          echo "Verified JAR: $jar_file"
 
       - name: Upload plugin JAR
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
-          name: GawharaStructures-1.0.2
-          path: target/GawharaStructures-1.0.1.jar
+          name: GawharaStructures-JAR
+          path: ${{ steps.verify.outputs.jar_path }}
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
