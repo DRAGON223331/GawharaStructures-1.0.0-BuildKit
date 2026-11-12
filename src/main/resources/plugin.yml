@@ -1,0 +1,18 @@
+name: GawharaStructures
+version: 1.0.0
+main: com.gawharasmp.structures.GawharaStructures
+api-version: '26.3'
+authors: [GawharaSMP]
+description: Adds custom treasure structures to selected Survival worlds.
+commands:
+  gstructures:
+    description: GawharaStructures management and treasure locator
+    usage: /gstructures [help|locate|list|generate|reload]
+    aliases: [structures, gstructure]
+permissions:
+  gawharastructures.admin:
+    description: Manage and generate custom structures
+    default: op
+  gawharastructures.locate:
+    description: Locate the nearest recorded structure
+    default: true

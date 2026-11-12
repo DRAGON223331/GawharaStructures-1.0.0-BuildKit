@@ -1,0 +1,228 @@
+# GawharaStructures - GawharaSMP
+# Structures are generated only in explicitly enabled worlds below.
+# The world named "spawn" is denied even if accidentally added to the whitelist.
+
+generation:
+  enabled: true
+  chance-per-chunk: 0.025 # 2.5% per newly populated chunk if no world override exists
+  require-flat-ground: true
+  max-ground-variation: 3
+  min-distance-between-structures: 180
+  blacklisted-worlds:
+    - spawn
+  min-distance-from-spawn:
+    world: 450
+    world_nether: 120
+    world_the_end: 120
+
+worlds:
+  world:
+    enabled: true
+    theme: overworld
+    chance-per-chunk: 0.025
+    structures:
+      - forest_shrine
+      - ruined_watchtower
+      - buried_ruins
+  world_nether:
+    enabled: true
+    theme: nether
+    chance-per-chunk: 0.035
+    structures:
+      - soul_vault
+      - magma_cache
+  world_the_end:
+    enabled: true
+    theme: end
+    chance-per-chunk: 0.045
+    structures:
+      - void_shrine
+      - ender_observatory
+  # Any world not explicitly enabled above is disabled.
+  spawn:
+    enabled: false
+    theme: overworld
+    structures: []
+  # Any other world is also disabled unless explicitly enabled here.
+
+structures:
+  forest_shrine:
+    enabled: true
+    display-name: '&aForest Shrine'
+    loot-table: overworld_rare
+  ruined_watchtower:
+    enabled: true
+    display-name: '&6Ruined Watchtower'
+    loot-table: overworld_common
+  buried_ruins:
+    enabled: true
+    display-name: '&7Buried Ruins'
+    loot-table: overworld_rare
+  soul_vault:
+    enabled: true
+    display-name: '&5Soul Vault'
+    loot-table: nether_rare
+  magma_cache:
+    enabled: true
+    display-name: '&cMagma Cache'
+    loot-table: nether_common
+  void_shrine:
+    enabled: true
+    display-name: '&dVoid Shrine'
+    loot-table: end_rare
+  ender_observatory:
+    enabled: true
+    display-name: '&bEnder Observatory'
+    loot-table: end_common
+
+loot:
+  items-per-chest:
+    min: 3
+    max: 5
+
+loot-tables:
+  overworld_common:
+    - material: IRON_INGOT
+      weight: 30
+      min: 2
+      max: 6
+    - material: GOLD_INGOT
+      weight: 22
+      min: 2
+      max: 5
+    - material: EMERALD
+      weight: 18
+      min: 1
+      max: 3
+    - material: EXPERIENCE_BOTTLE
+      weight: 18
+      min: 2
+      max: 5
+    - material: NAME_TAG
+      weight: 7
+      min: 1
+      max: 1
+    - material: DIAMOND
+      weight: 5
+      min: 1
+      max: 2
+  overworld_rare:
+    - material: DIAMOND
+      weight: 25
+      min: 2
+      max: 5
+    - material: EMERALD
+      weight: 24
+      min: 3
+      max: 7
+    - material: GOLDEN_APPLE
+      weight: 12
+      min: 1
+      max: 2
+    - material: ENCHANTED_GOLDEN_APPLE
+      weight: 1
+      min: 1
+      max: 1
+    - material: DIAMOND_PICKAXE
+      weight: 5
+      min: 1
+      max: 1
+    - material: EXPERIENCE_BOTTLE
+      weight: 33
+      min: 5
+      max: 12
+  nether_common:
+    - material: GOLD_INGOT
+      weight: 28
+      min: 3
+      max: 8
+    - material: QUARTZ
+      weight: 25
+      min: 4
+      max: 12
+    - material: BLAZE_ROD
+      weight: 12
+      min: 1
+      max: 3
+    - material: GLOWSTONE_DUST
+      weight: 20
+      min: 3
+      max: 8
+    - material: MAGMA_CREAM
+      weight: 15
+      min: 1
+      max: 3
+  nether_rare:
+    - material: ANCIENT_DEBRIS
+      weight: 4
+      min: 1
+      max: 2
+    - material: NETHERITE_SCRAP
+      weight: 2
+      min: 1
+      max: 1
+    - material: GOLD_INGOT
+      weight: 30
+      min: 5
+      max: 12
+    - material: CRYING_OBSIDIAN
+      weight: 24
+      min: 2
+      max: 6
+    - material: DIAMOND
+      weight: 10
+      min: 1
+      max: 3
+    - material: BLAZE_ROD
+      weight: 30
+      min: 2
+      max: 5
+  end_common:
+    - material: ENDER_PEARL
+      weight: 30
+      min: 2
+      max: 6
+    - material: CHORUS_FRUIT
+      weight: 25
+      min: 3
+      max: 8
+    - material: PURPUR_BLOCK
+      weight: 20
+      min: 4
+      max: 12
+    - material: DIAMOND
+      weight: 12
+      min: 1
+      max: 3
+    - material: EXPERIENCE_BOTTLE
+      weight: 13
+      min: 3
+      max: 8
+  end_rare:
+    - material: SHULKER_SHELL
+      weight: 8
+      min: 1
+      max: 2
+    - material: ELYTRA
+      weight: 1
+      min: 1
+      max: 1
+    - material: DIAMOND_BLOCK
+      weight: 8
+      min: 1
+      max: 2
+    - material: NETHERITE_INGOT
+      weight: 2
+      min: 1
+      max: 1
+    - material: ENDER_PEARL
+      weight: 36
+      min: 4
+      max: 12
+    - material: DIAMOND
+      weight: 45
+      min: 2
+      max: 5
+
+storage:
+  max-records: 10000
